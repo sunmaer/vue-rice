@@ -8,13 +8,13 @@
       </div>
       <el-form>
         <el-form-item>
-          <el-input prefix-icon="fa fa-user fa-lg" placeholder="请输入用户名"></el-input>
+          <el-input v-model="login.name" prefix-icon="fa fa-user fa-lg" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" prefix-icon="fa fa-lock fa-lg" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="login.password" prefix-icon="fa fa-lock fa-lg" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-checkbox label="记住密码"></el-checkbox>
+          <el-checkbox v-model="login.check" label="记住密码"></el-checkbox>
           <span class="login_reg" @click="goRegister">注册账号</span>
         </el-form-item>
         <el-form-item>
@@ -55,16 +55,28 @@
 </template>
 
 <script>
+  import { LOGIN } from '@/store/store'
+  import { baseUrl } from '@/config/api'
+
   export default {
     data () {
       return {
         // 登录或注册
-        type: 'login'
+        type: 'login',
+        login: {
+          name: '',
+          password: '',
+          check: false
+        }
       }
     },
     methods: {
       login () {
-        this.$router.push('/recongnition')
+        this.$ajax(`${baseUrl}/`, {
+          login
+        }).then((res) => {
+          console.log(res.data)
+        }) 
       },
       // 返回登录
       goLogin () {

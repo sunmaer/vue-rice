@@ -18,7 +18,6 @@ export default new Router({
       component: NotFound
     }, {
       path: '/',
-      name: 'login',
       component: Login
     }, {
       path: '/login',

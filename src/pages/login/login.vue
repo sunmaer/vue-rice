@@ -8,13 +8,13 @@
       </div>
       <el-form>
         <el-form-item>
-          <el-input v-model="login.name" prefix-icon="fa fa-user fa-lg" placeholder="请输入用户名"></el-input>
+          <el-input v-model="loginForm.name" prefix-icon="fa fa-user fa-lg" placeholder="请输入用户名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" v-model="login.password" prefix-icon="fa fa-lock fa-lg" placeholder="请输入密码"></el-input>
+          <el-input type="password" v-model="loginForm.password" prefix-icon="fa fa-lock fa-lg" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="login.check" label="记住密码"></el-checkbox>
+          <el-checkbox v-model="loginForm.check" label="记住密码"></el-checkbox>
           <span class="login_reg" @click="goRegister">注册账号</span>
         </el-form-item>
         <el-form-item>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import { LOGIN } from '@/store/store'
+  import { LOGIN } from '@/store/types'
   import { baseUrl } from '@/config/api'
 
   export default {
@@ -63,7 +63,7 @@
       return {
         // 登录或注册
         type: 'login',
-        login: {
+        loginForm: {
           name: '',
           password: '',
           check: false
@@ -72,11 +72,26 @@
     },
     methods: {
       login () {
-        this.$ajax(`${baseUrl}/`, {
-          login
+        this.$ajax({
+          method: 'POST',
+          url: `${baseUrl}/login`,
+          data: this.loginForm
         }).then((res) => {
-          console.log(res.data)
-        }) 
+          if(res.data.status && res.data.data) {
+            // 用户名写入 vuex
+            this.$store.commit(LOGIN, res.data.data.list[0].name)
+            this.$message.success(res.data.msg)
+            setTimeout(() => {
+              this.$router.push({
+                path: decodeURIComponent(this.$route.query.redirect || '/recongnition')
+              })
+            }, 500)
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        }).catch((err) => {
+          this.$message.error(`登录失败 ${err}`)
+        })
       },
       // 返回登录
       goLogin () {

@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store/store'
 import ElementUI from 'element-ui'
 import axios from 'axios'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -16,7 +17,7 @@ Vue.config.productionTip = false
 // 路由拦截
 router.beforeEach((to, from, next) => {
   if(to.matched.some(r => r.meta.requireAuth)) {
-    if(false) {
+    if(store.state.user) {
       next()
     } else {
       next({
@@ -33,6 +34,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

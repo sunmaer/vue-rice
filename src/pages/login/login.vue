@@ -8,17 +8,32 @@
       </div>
       <el-form>
         <el-form-item>
-          <el-input v-model="loginForm.name" prefix-icon="fa fa-user fa-lg" placeholder="请输入用户名"></el-input>
+          <el-input
+            v-model="loginForm.name"
+            prefix-icon="fa fa-user fa-lg"
+            placeholder="请输入用户名">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" v-model="loginForm.password" prefix-icon="fa fa-lock fa-lg" placeholder="请输入密码"></el-input>
+          <el-input
+            type="password"
+            v-model="loginForm.password"
+            prefix-icon="fa fa-lock fa-lg"
+            placeholder="请输入密码">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="loginForm.check" label="记住密码"></el-checkbox>
+          <el-checkbox
+            v-model="loginForm.check"
+            label="记住密码">
+          </el-checkbox>
           <span class="login_reg" @click="goRegister">注册账号</span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="login_button" @click="login">登录</el-button>
+          <el-button
+            type="primary"
+            class="login_button"
+            @click="login">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -29,25 +44,50 @@
       </div>
       <el-form>
         <el-form-item>
-          <el-input prefix-icon="fa fa-user" placeholder="请输入用户名"></el-input>
+          <el-input
+            v-model="registerForm.name"
+            prefix-icon="fa fa-user"
+            placeholder="请输入用户名">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" prefix-icon="fa fa-lock" placeholder="请输入密码"></el-input>
+          <el-input
+            v-model="registerForm.password"
+            type="password"
+            prefix-icon="fa fa-lock"
+            placeholder="请输入密码">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input type="password" prefix-icon="fa fa-check-square" placeholder="请确认密码"></el-input>
+          <el-input
+            v-model="registerForm.conPassword"
+            type="password"
+            prefix-icon="fa fa-check-square"
+            placeholder="请确认密码">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input prefix-icon="fa fa-phone" placeholder="请输入手机号码"></el-input>
+          <el-input
+            v-model="registerForm.telephone"
+            prefix-icon="fa fa-phone"
+            placeholder="请输入手机号码">
+          </el-input>
         </el-form-item>
         <el-form-item>
-          <el-input prefix-icon="fa fa-envelope" placeholder="请输入邮箱"></el-input>
+          <el-input
+            v-model="registerForm.email"
+            prefix-icon="fa fa-envelope"
+            placeholder="请输入邮箱">
+          </el-input>
         </el-form-item>
         <el-form-item>
           <span class="login_reg" @click="goLogin">返回登录</span>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="login_button">注册</el-button>
+          <el-button
+            type="primary"
+            class="login_button"
+            @click="register">注册</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -67,6 +107,13 @@
           name: '',
           password: '',
           check: false
+        },
+        registerForm: {
+          name: '',
+          password: '',
+          conPassword: '',
+          telephone: '',
+          email: ''
         }
       }
     },
@@ -91,6 +138,21 @@
           }
         }).catch((err) => {
           this.$message.error(`登录失败 ${err}`)
+        })
+      },
+      register () {
+        this.$ajax({
+          method: 'POST',
+          url: `${baseUrl}/register`,
+          data: this.registerForm
+        }).then((res) => {
+          if(res.data.status && res.data.data) {
+            this.$message.success(res.data.msg)
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        }).catch((err) => {
+          this.$message.error(`注册失败 ${err}`)
         })
       },
       // 返回登录

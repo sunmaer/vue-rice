@@ -4,7 +4,7 @@
       <div class="banner_mask"></div>
       <div class="banner_content">
         <div class="content_head">
-          <span> <i class="fa fa-camera"></i> 水稻病害识别</span>
+          <span> <i class="fa fa-camera"></i> 基于图像的水稻病害识别</span>
           <p>{{ user }}
             <span @click="logout" class="logout">退出登录</span>
           </p>
@@ -13,7 +13,8 @@
           <h1 class="tit">水稻病害 智能识别</h1>
           <el-upload
             class="upload"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="url"
+            name="file"
             :show-file-list="false"
             :multiple="false">
             <el-button size="medium">开始识别</el-button>
@@ -36,7 +37,7 @@
       </div>
     </div>
     <div class="recongnition_text">
-      <el-tabs v-model="name" @tab-click="handleClick">
+      <el-tabs v-model="name" type="border-card">
         <el-tab-pane label="稻瘟病" name="first">
           &nbsp;&nbsp;&nbsp;&nbsp;病菌以分生孢子和菌丝体在稻草和稻谷上越冬。翌年产生分生孢子借风雨传播到稻株上，萌发侵入寄主向邻近细胞扩展发病，形成中心病株。病部形成的分生孢子，借风雨传播进行再侵染。播种带菌种子可引起苗瘟。适温高湿，有雨、雾、露存在条件下有利于发病。菌丝生长温限在8～37℃范围，最适温度26～28℃。孢子形成温限在10～35℃范围，以25～28℃最适，相对湿度90%以上。孢子萌发需有水存在并持续6～8小时。适宜温度才能形成附着胞并产生侵入丝，穿透稻株表皮，在细胞间蔓延摄取养分。阴雨连绵，日照不足或时晴时雨，或早晚有云雾或结露条件，病情扩展迅速。品种抗性因地区、季节、种植年限和生理小种不同而异。籼型品种一般优于粳型品种。同一品种在不同生育期抗性表现也不同，秧苗4叶期、分蘖期和抽穗期易感病，圆秆期发病轻，同一器官或组织在组织幼嫩期发病重。穗期以始穗时抗病性弱。偏施过施氮肥有利发病。放水早或长期深灌根系发育差，抗病力弱发病重。<br>                                                                                 
           &nbsp;&nbsp;&nbsp;&nbsp;稻瘟病是真菌寄生引起，青灰色霉即是病菌的分生孢子，病害的扩展靠分生孢子在空气中传播。病菌发育最适温病为25℃～28℃，高湿有利分生孢子形成飞散和萌发，而高湿度持续达一昼夜以上，则有利于病害发生流行。<br>
@@ -61,11 +62,14 @@
 
 <script>
   import { LOGIN } from '@/store/store'
+  import { baseUrl } from '@/config/api'
+
   export default {
     data() {
       return {
         user: '',
-        name: 'first'
+        name: 'first',
+        url: `${baseUrl}/recongnition`
       }
     },
     created () {
@@ -89,7 +93,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .mod_recongnition {
     .recongnition_banner {
       position: relative;
@@ -161,6 +165,7 @@
           width: 100%;
           height: 100%;
           cursor: pointer;
+          transition-duration: 100ms;
           &:hover {
             transform: scale(1.2);
             transition-duration: 500ms;
@@ -183,6 +188,12 @@
       padding: 0 20px;
       line-height: 30px;
       color: #333;
+      .el-tabs--border-card>.el-tabs__header {
+        background-color: transparent;
+      }
+      .el-tabs__content {
+        padding: 15px 20px;
+      }
     }
     .foot {
       line-height: 60px;

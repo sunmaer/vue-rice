@@ -1,6 +1,11 @@
 <template>
   <div class="mod_recongnition">
-    <div class="recongnition_banner">
+    <div 
+      class="recongnition_banner"
+      v-loading="loading"
+      element-loading-text="图像正在识别..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
       <div class="banner_mask"></div>
       <div class="banner_content">
         <div class="content_head">
@@ -16,7 +21,10 @@
             :action="url"
             name="file"
             :show-file-list="false"
-            :multiple="false">
+            :multiple="false"
+            :before-upload="start"
+            :on-success="success"
+            :on-error="error">
             <el-button size="medium">开始识别</el-button>
           </el-upload>
         </div>
@@ -69,7 +77,8 @@
       return {
         user: '',
         name: 'first',
-        url: `${baseUrl}/recongnition`
+        url: `${baseUrl}/recongnition`,
+        loading: false
       }
     },
     created () {
@@ -88,6 +97,19 @@
         }).then(() => {
           location.reload()
         }).catch(() => {})
+      },
+      start() {
+        this.loading = true
+      },
+      // 识别成功
+      success(res) {
+        if(res.status && res.data) {
+          this.loading = false
+          this.$message.success(`图像识别成功，该水稻病害类型为：${res.data.type}`)
+        }
+      },
+      error(err) {
+        this.$message.error(`图像识别失败 ${err}`)
       }
     }
   }
@@ -96,6 +118,9 @@
 <style lang="scss">
   .mod_recongnition {
     .recongnition_banner {
+      .el-loading-spinner .el-loading-text, .el-loading-spinner i {
+        color: #fff;
+      }
       position: relative;
       width: 100%;
       height: 600px;
